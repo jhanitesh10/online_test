@@ -74,10 +74,52 @@ $query = mysqli_query($con,$sql );
             }
               else
                   {
+
                    $qid_arr = implode(',',$_SESSION['q_id']);
+                  echo $_SESSION['count'];
+                  if($_SESSION['count']==0)
+                  {
+                 // echo hey;
+                  //exit();
+                         $sql=  "SELECT us.subject_id,us.user_id,question_id
+                          FROM subject_status ss
+                          JOIN user_response us ON us.user_id=ss.user_id AND us.subject_id = ss.subject_type
+                          WHERE us.user_id='$userid'
+                          AND us.subject_id='$subject_type' AND ss.status='0'";
+                           //print_r($sql);
+                        //exit();
+                            $result = mysqli_query($con,$sql );
+                                //$cnt=1;
+                           //result = $con->query($sql1);
+                             if ($result->num_rows > 0 && $result->num_rows >$_SESSION['count']) 
+                                {
+                                while($row = $result->fetch_assoc()) 
+                                {   
+                                 
+                                  $_SESSION['count']++;
+                                   //exit();
+                                 //$questions_in_db= $row['question_id'];               
+                                 //$_SESSION['q_id']=$row['question_id'];
+                                 //print_r($_SESSION['q_id']);
+                                 //$qid_arr = implode(',',$_SESSION['q_id']);
+                                 array_push($_SESSION['q_id'],$row['question_id']);
+
+                                //exit();
+                                  //$cnt++;
+                                 }
+                              $_SESSION['QuestionCount']=$_SESSION['count'];
+                               }
+                            }
+                              //echo $_SESSION['QuestionCount'];
+                               print_r($_SESSION['q_id']);
+                               print_r($qid_arr);
+                                  
+                                 
+                                  //exit();
+
                                
                     $sql = "SELECT id,img_url, question, answer1, answer2, answer3, answer4, answer  FROM questions where q_type='$subject_type' AND id NOT IN ($qid_arr) ORDER BY RAND() LIMIT 1";
-
+                                        
 ?>
 
 <?php
@@ -94,7 +136,7 @@ array_push($_SESSION['q_id'], $row["id"]);
 ?>
   
 
-<h3><?php echo $row["question"]; ?></h3></br>
+<h3>Q:<?php echo $_SESSION['QuestionCount']; ?>)&nbsp&nbsp<?php echo $row["question"]; ?></h3></br>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp 
 
 <?php

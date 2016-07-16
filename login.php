@@ -27,6 +27,7 @@ if ($result->num_rows > 0)
 			$_SESSION['seas_user_id']=$row['user_id'];
 			$_SESSION['values']=0;
       $_SESSION['q_id'][]=0;
+      $_SESSION['count']=0;
 
 
       header('Location:subject_type.php');
